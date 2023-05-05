@@ -6,6 +6,8 @@ workload:
     type: Deployment
     podSpec:
       hostNetwork: {{ .Values.webdavNetwork.hostNetwork }}
+      securityContext:
+        fsGroup: {{ .Values.webdavRunAs.group }}
       containers:
         webdav:
           enabled: true

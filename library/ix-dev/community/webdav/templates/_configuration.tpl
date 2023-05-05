@@ -11,6 +11,11 @@ configmap:
         <VirtualHost *:{{ .Values.webdavNetwork.httpPort }}>
           DavLockDB "/usr/local/apache2/var/DavLock"
 
+          <Location "/health">
+            RewriteEngine On
+            RewriteRule .* - [R=200]
+          </Location>
+
           <Directory />
           {{- if ne .Values.webdavConfig.authType "none" }}
             AuthType {{ .Values.webdavConfig.authType }}
@@ -33,10 +38,19 @@ configmap:
             Options Indexes FollowSymLinks
           </Directory>
 
-          <Location "/health">
-            RewriteEngine On
-            RewriteRule .* - [R=200]
-          </Location>
+          # The following directives disable redirects on non-GET requests for
+          # a directory that does not include the trailing slash.  This fixes a
+          # problem with several clients that do not appropriately handle
+          # redirects for folders with DAV methods.
+          BrowserMatch "Microsoft Data Access Internet Publishing Provider" redirect-carefully
+          BrowserMatch "MS FrontPage" redirect-carefully
+          BrowserMatch "^WebDrive" redirect-carefully
+          BrowserMatch "^WebDAVFS/1.[01234]" redirect-carefully
+          BrowserMatch "^gnome-vfs/1.0" redirect-carefully
+          BrowserMatch "^XML Spy" redirect-carefully
+          BrowserMatch "^Dreamweaver-WebDAV-SCM1" redirect-carefully
+          BrowserMatch " Konqueror/4" redirect-carefully
+          RequestReadTimeout handshake=0 header=20-40,MinRate=500 body=20,MinRate=500
         </VirtualHost>
       httpd.conf: |
         # The absolutely necessary modules
