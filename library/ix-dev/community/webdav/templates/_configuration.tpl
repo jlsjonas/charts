@@ -38,6 +38,21 @@ configmap:
             Options Indexes FollowSymLinks
           </Directory>
 
+        {{- range .Values.webdavStorage.shares }}
+          {{/* TODO: Maybe change .hostPath to /shares/name
+               and make sure we set mountPath to /shares/name */}}
+          Alias /{{ .name }} "{{ .hostPath }}"
+
+          <Directory "{{ .name }}">
+          </Directory>
+
+          {{- if .readOnly }}
+          <Location "/{{ .name }}">
+            AllowMethods GET OPTIONS PROPFIND
+          </Location>
+          {{- end }}
+        {{- end }}
+
           # The following directives disable redirects on non-GET requests for
           # a directory that does not include the trailing slash.  This fixes a
           # problem with several clients that do not appropriately handle

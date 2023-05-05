@@ -19,9 +19,12 @@ webdavNetwork:
 webdavRunAs:
   user: 33
   group: 33
-# webdavStorage:
-#   config:
-#     type: ixVolume
-#     hostPath: ''
-#     datasetName: config
-#   additionalStorages: []
+webdavStorage:
+  # config:
+  #   type: ixVolume
+  #   hostPath: ''
+  #   datasetName: config
+  shares:
+    - name:
+      hostPath:
+      readOnly:

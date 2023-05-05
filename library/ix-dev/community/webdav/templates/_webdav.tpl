@@ -113,17 +113,18 @@ persistence:
           mountPath: /config
         01-permissions:
           mountPath: /mnt/directories/config
-  {{- range $idx, $storage := .Values.lidarrStorage.additionalStorages }}
-  {{ printf "lidarr-%v" (int $idx) }}:
+  */}}
+  {{- range $idx, $storage := .Values.webdavStorage.shares }}
+  {{ printf "webdav-%v" (int $idx) }}:
     enabled: true
-    type: {{ $storage.type }}
+    type: {{ $storage.type | default "hostPath" }}
     datasetName: {{ $storage.datasetName | default "" }}
     hostPath: {{ $storage.hostPath | default "" }}
     targetSelector:
-      lidarr:
-        lidarr:
-          mountPath: {{ $storage.mountPath }}
+      webdav:
+        webdav:
+          mountPath: /shares/{{ $storage.name }}
         01-permissions:
-          mountPath: /mnt/directories{{ $storage.mountPath }}
-  {{- end }}*/}}
+          mountPath: /mnt/directories/{{ $storage.name }}
+  {{- end }}
 {{- end -}}
