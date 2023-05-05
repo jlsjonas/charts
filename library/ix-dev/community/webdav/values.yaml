@@ -1,0 +1,27 @@
+image:
+  repository: httpd
+  pullPolicy: IfNotPresent
+  tag: '2.4.57'
+
+resources:
+  limits:
+    cpu: 4000m
+    memory: 8Gi
+
+webdavConfig:
+  authType: none
+  additionalEnvs: []
+webdavNetwork:
+  httpPort: 30000
+  httpsPort: 30001
+  hostNetwork: false
+  certificateID: 0
+webdavRunAs:
+  user: 33
+  group: 33
+# webdavStorage:
+#   config:
+#     type: ixVolume
+#     hostPath: ''
+#     datasetName: config
+#   additionalStorages: []
